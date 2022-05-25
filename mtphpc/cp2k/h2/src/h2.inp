@@ -1,0 +1,86 @@
+&GLOBAL
+    PROJECT_NAME h2
+    RUN_TYPE MD
+&END GLOBAL
+
+&MOTION
+  &MD
+    ENSEMBLE NVT            # The ensemble for MD propagation, NVE (microcanonical), NVT (canonical), NPT_I (NPT with isotropic cell) 
+    STEPS 100               # The number of MD steps to perform
+    TIMESTEP 1              # The length of an integration step (fs)
+    TEMPERATURE 100         # The temperature in K used to initialize the velocities with init and pos restart, and in the NPT/NVT simulations
+    &THERMOSTAT
+      REGION MASSIVE
+      &NOSE                    # Uses the Nose-Hoover thermostat
+        TIMECON 1000           # Time constant of the thermostat chain, how often does thermostat adjust your system 
+      &END NOSE
+    &END THERMOSTAT
+  &END MD
+&END MOTION
+
+&FORCE_EVAL
+  METHOD QUICKSTEP          # Method to calculate force: Fist (Molecular Mechanics), QS or QUICKSTEP (Electronic structure methods, like DFT)
+  &DFT
+    POTENTIAL_FILE_NAME GTH_POTENTIALS
+    BASIS_SET_FILE_NAME BASIS_SET
+    &MGRID
+      REL_CUTOFF 30         # Determines the grid at which a Gaussian is mapped, giving the cutoff used for a gaussian with alpha = 1
+      CUTOFF 100            # The cutoff of the finest grid level
+    &END MGRID
+    &QS
+      EPS_DEFAULT 1e-10     # Try setting all EPS_xxx to values leading to an energy correct up to EPS_DEFAULT
+    &END QS
+    &XC
+      &XC_FUNCTIONAL PADE
+      &END XC_FUNCTIONAL
+    &END XC
+    &SCF
+      EPS_SCF 1e-07         # Target accuracy for the SCF convergence
+      MAX_SCF 300           # Maximum number of SCF iteration to be performed for one optimization
+      SCF_GUESS ATOMIC      # Change the initial guess for the wavefunction
+      &DIAGONALIZATION ON
+        ALGORITHM STANDARD
+      &END DIAGONALIZATION
+      &MIXING TRUE
+        METHOD BROYDEN_MIXING     # Mixing method to be applied
+        ALPHA 0.4                 # Fraction of new density to be included
+        NBUFFER 8                 # Number of previous steps stored for the actual mixing scheme
+      &END MIXING
+    &END SCF
+  &END DFT
+  &MM
+    &FORCEFIELD
+      &CHARGE               # Charge of the MM atoms 
+        ATOM H              # Defines the atomic kind of the charge
+        CHARGE 1            # Defines the charge of the MM atom in electron charge unit
+      &END
+      &NONBONDED
+        &LENNARD-JONES      # LENNARD-JONES potential. Functional form: V(r) = 4.0 * EPSILON * [(SIGMA/r)^12-(SIGMA/r)^6]
+          atoms H H         # Defines the atomic kind involved in the nonbonded potential 
+          EPSILON 3.180     # Defines the EPSILON parameter of the LJ potential (K_e) 
+          SIGMA 2.928       # Defines the SIGMA parameter of the LJ potential (Angstrom)
+          RCUT 7.40         # Defines the cutoff parameter of the LJ potential 
+        &END LENNARD-JONES
+      &END NONBONDED
+    &END FORCEFIELD
+    &POISSON                # Poisson solver
+      &EWALD
+        EWALD_TYPE none
+      &END EWALD
+    &END POISSON
+  &END MM
+  &SUBSYS
+    &CELL
+      ABC 5.0 5.0 5.0       # Simulation box size. Lengths of the cell vectors A, B, and C
+      PERIODIC XYZ
+    &END CELL
+    &COORD
+      H 1.98347532 3.92834348 0.93247856
+      H 3.93487239 1.93485701 2.98205204
+    &END COORD
+    &KIND H
+      POTENTIAL GTH-PADE-q1
+      BASIS_SET DZVP-GTH-PADE
+    &END KIND
+  &END SUBSYS
+&END FORCE_EVAL
