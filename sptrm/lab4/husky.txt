@@ -1,0 +1,202 @@
+/------------------------------ Husky Simulation ------------------------------\
+
+USAGE: roslaunch husky_gazebo husky_playpen.launch
+
+    These are the working nodes of a husky_gazebo simulation using
+husky_playpen.launch launcher, alongside publications, subscriptions and used
+services:
+
+1. Node [/twist_mux]
+    Publications: 
+        * /diagnostics [diagnostic_msgs/DiagnosticArray]
+        * /husky_velocity_controller/cmd_vel [geometry_msgs/Twist]
+        * /rosout [rosgraph_msgs/Log]
+    Subscriptions: 
+        * /clock [rosgraph_msgs/Clock]
+        * /cmd_vel [unknown type]
+        * /e_stop [unknown type]
+        * /joy_teleop/cmd_vel [geometry_msgs/Twist]
+        * /twist_marker_server/cmd_vel [geometry_msgs/Twist]
+    Services: 
+        * /twist_mux/get_loggers
+        * /twist_mux/set_logger_level
+
+2. Node [/twist_marker_server]
+    Publications: 
+        * /rosout [rosgraph_msgs/Log]
+        * /twist_marker_server/cmd_vel [geometry_msgs/Twist]
+        * /twist_marker_server/update [visualization_msgs/InteractiveMarkerUpdate]
+        * /twist_marker_server/update_full [visualization_msgs/InteractiveMarkerInit]
+    Subscriptions: 
+        * /clock [rosgraph_msgs/Clock]
+        * /twist_marker_server/feedback [unknown type]
+    Services: 
+        * /twist_marker_server/get_loggers
+        * /twist_marker_server/set_logger_level
+
+3. Node [/rosout]
+    Publications: 
+        * /rosout_agg [rosgraph_msgs/Log]
+    Subscriptions: 
+        * /clock [rosgraph_msgs/Clock]
+        * /rosout [rosgraph_msgs/Log]
+    Services: 
+        * /rosout/get_loggers
+        * /rosout/set_logger_level
+
+4. Node [/robot_state_publisher]
+    Publications: 
+        * /rosout [rosgraph_msgs/Log]
+        * /tf [tf/tfMessage]
+        * /tf_static [tf2_msgs/TFMessage]
+    Subscriptions: 
+        * /clock [rosgraph_msgs/Clock]
+        * /joint_states [sensor_msgs/JointState]
+    Services: 
+        * /robot_state_publisher/get_loggers
+        * /robot_state_publisher/set_logger_level
+
+5. Node [/joy_teleop/teleop_twist_joy]
+    Publications: 
+        * /joy_teleop/cmd_vel [geometry_msgs/Twist]
+        * /rosout [rosgraph_msgs/Log]
+    Subscriptions: 
+        * /clock [rosgraph_msgs/Clock]
+        * /joy_teleop/joy [sensor_msgs/Joy]
+    Services: 
+        * /joy_teleop/teleop_twist_joy/get_loggers
+        * /joy_teleop/teleop_twist_joy/set_logger_level
+
+6. Node [/joy_teleop/joy_node]
+    Publications: 
+        * /diagnostics [diagnostic_msgs/DiagnosticArray]
+        * /joy_teleop/joy [sensor_msgs/Joy]
+        * /rosout [rosgraph_msgs/Log]
+    Subscriptions: 
+        * /clock [rosgraph_msgs/Clock]
+        * /joy_teleop/joy/set_feedback [unknown type]
+    Services: 
+        * /joy_teleop/joy_node/get_loggers
+        * /joy_teleop/joy_node/set_logger_level
+
+7. Node [/gazebo_gui]
+    Publications: 
+        * /rosout [rosgraph_msgs/Log]
+    Subscriptions: 
+        * /clock [rosgraph_msgs/Clock]
+    Services: 
+        * /gazebo_gui/get_loggers
+        * /gazebo_gui/set_logger_level
+
+8. Node [/gazebo]
+    Publications: 
+        * /clock [rosgraph_msgs/Clock]
+        * /gazebo/link_states [gazebo_msgs/LinkStates]
+        * /gazebo/model_states [gazebo_msgs/ModelStates]
+        * /gazebo/parameter_descriptions [dynamic_reconfigure/ConfigDescription]
+        * /gazebo/parameter_updates [dynamic_reconfigure/Config]
+        * /gazebo/performance_metrics [gazebo_msgs/PerformanceMetrics]
+        * /husky_velocity_controller/odom [nav_msgs/Odometry]
+        * /husky_velocity_controller/parameter_descriptions [dynamic_reconfigure/ConfigDescription]
+        * /husky_velocity_controller/parameter_updates [dynamic_reconfigure/Config]
+        * /imu/data [sensor_msgs/Imu]
+        * /imu/data/accel/parameter_descriptions [dynamic_reconfigure/ConfigDescription]
+        * /imu/data/accel/parameter_updates [dynamic_reconfigure/Config]
+        * /imu/data/bias [sensor_msgs/Imu]
+        * /imu/data/rate/parameter_descriptions [dynamic_reconfigure/ConfigDescription]
+        * /imu/data/rate/parameter_updates [dynamic_reconfigure/Config]
+        * /imu/data/yaw/parameter_descriptions [dynamic_reconfigure/ConfigDescription]
+        * /imu/data/yaw/parameter_updates [dynamic_reconfigure/Config]
+        * /joint_states [sensor_msgs/JointState]
+        * /navsat/fix [sensor_msgs/NavSatFix]
+        * /navsat/fix/position/parameter_descriptions [dynamic_reconfigure/ConfigDescription]
+        * /navsat/fix/position/parameter_updates [dynamic_reconfigure/Config]
+        * /navsat/fix/status/parameter_descriptions [dynamic_reconfigure/ConfigDescription]
+        * /navsat/fix/status/parameter_updates [dynamic_reconfigure/Config]
+        * /navsat/fix/velocity/parameter_descriptions [dynamic_reconfigure/ConfigDescription]
+        * /navsat/fix/velocity/parameter_updates [dynamic_reconfigure/Config]
+        * /navsat/vel [geometry_msgs/Vector3Stamped]
+        * /rosout [rosgraph_msgs/Log]
+        * /tf [tf/tfMessage]
+    Subscriptions: 
+        * /clock [rosgraph_msgs/Clock]
+        * /gazebo/set_link_state [unknown type]
+        * /gazebo/set_model_state [unknown type]
+        * /husky_velocity_controller/cmd_vel [geometry_msgs/Twist]
+    Services: 
+        * /controller_manager/list_controller_types
+        * /controller_manager/list_controllers
+        * /controller_manager/load_controller
+        * /controller_manager/reload_controller_libraries
+        * /controller_manager/switch_controller
+        * /controller_manager/unload_controller
+        * /gazebo/apply_body_wrench
+        * /gazebo/apply_joint_effort
+        * /gazebo/clear_body_wrenches
+        * /gazebo/clear_joint_forces
+        * /gazebo/delete_light
+        * /gazebo/delete_model
+        * /gazebo/get_joint_properties
+        * /gazebo/get_light_properties
+        * /gazebo/get_link_properties
+        * /gazebo/get_link_state
+        * /gazebo/get_loggers
+        * /gazebo/get_model_properties
+        * /gazebo/get_model_state
+        * /gazebo/get_physics_properties
+        * /gazebo/get_world_properties
+        * /gazebo/pause_physics
+        * /gazebo/reset_simulation
+        * /gazebo/reset_world
+        * /gazebo/set_joint_properties
+        * /gazebo/set_light_properties
+        * /gazebo/set_link_properties
+        * /gazebo/set_link_state
+        * /gazebo/set_logger_level
+        * /gazebo/set_model_configuration
+        * /gazebo/set_model_state
+        * /gazebo/set_parameters
+        * /gazebo/set_physics_properties
+        * /gazebo/spawn_sdf_model
+        * /gazebo/spawn_urdf_model
+        * /gazebo/unpause_physics
+        * /husky_velocity_controller/set_parameters
+        * /imu/data/accel/set_parameters
+        * /imu/data/calibrate
+        * /imu/data/rate/set_parameters
+        * /imu/data/set_accel_bias
+        * /imu/data/set_rate_bias
+        * /imu/data/yaw/set_parameters
+        * /navsat/fix/position/set_parameters
+        * /navsat/fix/set_reference_geopose
+        * /navsat/fix/status/set_parameters
+        * /navsat/fix/velocity/set_parameters
+
+9. Node [/ekf_localization]
+    Publications: 
+        * /diagnostics [diagnostic_msgs/DiagnosticArray]
+        * /odometry/filtered [nav_msgs/Odometry]
+        * /rosout [rosgraph_msgs/Log]
+        * /tf [tf/tfMessage]
+    Subscriptions: 
+        * /clock [rosgraph_msgs/Clock]
+        * /husky_velocity_controller/odom [nav_msgs/Odometry]
+        * /imu/data [sensor_msgs/Imu]
+        * /set_pose [unknown type]
+        * /tf [tf/tfMessage]
+        * /tf_static [tf2_msgs/TFMessage]
+    Services: 
+        * /ekf_localization/enable
+        * /ekf_localization/get_loggers
+        * /ekf_localization/set_logger_level
+        * /ekf_localization/toggle
+        * /set_pose
+
+10. Node [/base_controller_spawner]
+    Publications: 
+        * /rosout [rosgraph_msgs/Log]
+    Subscriptions: 
+        * /clock [rosgraph_msgs/Clock]
+    Services: 
+        * /base_controller_spawner/get_loggers
+        * /base_controller_spawner/set_logger_level
