@@ -1,0 +1,63 @@
+Today, out-of-order superscalars use techniques such
+as register renaming and dynamic scheduling to eliminate
+hazards created by the reuse of registers, and to hide long
+execution latencies resulting from DCache misses and
+floating point operations. However, the basic method
+of sequential fetch and dispatch of instructions is still the
+underlying computational model. Consequently, the
+performance of superscalars is limited by instruction
+supply disruptions caused by branch mispredictions and
+ICache misses. On programs where these disruptions
+occur often, the execution throughput is well below a
+wide superscalar peak bandwidth.
+Ideally, we need an uninterrupted instruction fetch
+supply to increase performance. Even then, there are other
+complexities that have to be overcome to increase
+execution throughput. Register renaming requires
+dependency checking among instructions of the same
+block, and multiple read ports into the rename table. This
+logic increases in complexity as the width of the rename
+stage increases. A large pool of instructions is also
+necessary to find enough independent instructions to run
+the execution units at full utilization. The issue logic has
+to identify independent instructions quickly, as soon as
+their inputs become ready, and issue them to the
+execution units.
+We present an architecture that improves instruction
+supply and allows instruction windows of thousands of
+instructions. The architecture uses dynamic multiple
+threads (DMT) of control to fetch, rename, and dispatch
+instructions simultaneously from different locations of the
+same program into the instruction window. In other
+words, instructions are fetched out-of-order. Fetching
+using multiple threads has three advantages. First, due to
+the frequency of branches in many programs, it is easier
+to increase the instruction supply by fetching multiple
+small blocks simultaneously than by increasing the size of
+the fetch block. Second, when the supply from one thread
+is interrupted due to an ICache miss or a branch
+misprediction, the other threads will continue filling the
+instruction window. Third, although duplication of the
+ICache fetch port and the rename unit is necessary to
+increase total fetch bandwidth, dependency checks of
+instructions within a block and the number of read ports
+into a rename table entry do not increase in complexity.
+In order to enlarge the instruction pool without
+creating too much complexity in the issue logic, we have
+designed a hierarchy of instruction windows. One small
+window is tightly coupled with the execution units. A
+conventional physical register file or reorder buffer can be
+used for this level. A much larger set of instruction
+buffers are located outside the execution pipeline. These
+buffers are slower to access, but can store many more
+instructions. The hardware breaks up a program
+automatically into loops and procedure threads that
+execute simultaneously on the superscalar processor. Data
+speculation on the inputs to a thread is used to allow new
+threads to start execution immediately. Otherwise, a
+thread may quickly stall waiting for its inputs to be
+computed by other threads. Although the instruction fetch,
+dispatch, and execution is out of order, instructions are
+reordered after they complete execution and all
+mispredictions, including branch and data, are corrected.
+Results are then committed in order.
